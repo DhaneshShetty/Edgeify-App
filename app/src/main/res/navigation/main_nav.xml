@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/getImageFragment">
+
+    <fragment
+        android:id="@+id/getImageFragment"
+        android:name="com.ddevs.edgeify.views.GetImageFragment"
+        android:label="fragment_get_image"
+        tools:layout="@layout/fragment_get_image" >
+        <action
+            android:id="@+id/action_getImageFragment_to_previewImageFragment"
+            app:destination="@id/previewImageFragment"
+            app:popUpTo="@id/getImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/previewImageFragment"
+        android:name="com.ddevs.edgeify.views.PreviewImageFragment"
+        android:label="fragment_preview_image"
+        tools:layout="@layout/fragment_preview_image" >
+        <action
+            android:id="@+id/action_previewImageFragment_to_resultFragment"
+            app:destination="@id/resultFragment"
+            app:popUpTo="@id/getImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.ddevs.edgeify.views.ResultFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result" >
+        <action
+            android:id="@+id/action_resultFragment_to_getImageFragment"
+            app:destination="@id/getImageFragment"
+            app:launchSingleTop="true" />
+    </fragment>
+</navigation>
