@@ -10,5 +10,5 @@ import retrofit2.http.Part
 interface ApiService {
     @Multipart
     @POST("process")
-    suspend fun processImage(@Part image: MultipartBody.Part): Response<ImageLinks>
+    suspend fun processImage(@Part img: MultipartBody.Part): Response<ImageLinks>
 }
