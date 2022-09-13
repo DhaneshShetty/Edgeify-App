@@ -1,16 +1,15 @@
 package com.ddevs.edgeify.views
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.ddevs.edgeify.MainViewModel
 import com.ddevs.edgeify.R
-import com.ddevs.edgeify.databinding.FragmentGetImageBinding
 import com.ddevs.edgeify.databinding.FragmentResultBinding
 
 
@@ -23,7 +22,7 @@ class ResultFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_result, container, false)
         viewModel.resultUri.observe(viewLifecycleOwner) {
             if (it != null) {

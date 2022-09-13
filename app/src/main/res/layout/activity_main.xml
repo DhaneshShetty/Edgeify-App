@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_host_fragment_container"
-    android:name="androidx.navigation.fragment.NavHostFragment"
-    android:layout_width="match_parent"
-    app:navGraph="@navigation/main_nav" />
+    android:layout_width="match_parent">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment_container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/main_nav" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorColor="@color/green"
+        android:elevation="100dp"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:indicatorDirectionCircular="clockwise"
+        app:indicatorSize="50dp"
+        app:trackColor="@color/white"
+        app:trackThickness="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

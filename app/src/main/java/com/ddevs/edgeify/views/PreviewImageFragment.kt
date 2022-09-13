@@ -26,37 +26,38 @@ class PreviewImageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_preview_image, container, false)
-        Log.d("Uri1",viewModel.getUri().toString())
-        var file:File = File(viewModel.getUri().path)
+        //Log.d("Uri1",viewModel.getUri().toString())
         Glide.with(binding.root)
             .load(viewModel.getBitmap()).into(binding.imageView)
         binding.cancelButton.setOnClickListener {
             findNavController().navigateUp()
         }
         binding.confirmButton.setOnClickListener {
-            var file:File = File(requireContext().cacheDir,"final.jpeg")
+            val file = File(requireContext().cacheDir,"final.jpeg")
             file.createNewFile()
-            var bitmap = viewModel.getBitmap()
-            var bos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG,0,bos);
-            var bitmapdata = bos.toByteArray()
-            var fos:FileOutputStream? = null;
-            try {
-                fos = FileOutputStream(file)
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
+            val bitmap = viewModel.getBitmap()
+            if(bitmap!=null) {
+                val bos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
+                val bitmapdata = bos.toByteArray()
+                var fos: FileOutputStream? = null
+                try {
+                    fos = FileOutputStream(file)
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                }
+                try {
+                    fos?.write(bitmapdata)
+                    fos?.flush()
+                    fos?.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                viewModel.processImage(file)
+                findNavController().navigate(R.id.action_previewImageFragment_to_resultFragment)
             }
-            try {
-                fos?.write(bitmapdata)
-                fos?.flush()
-                fos?.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            viewModel.processImage(file)
-            findNavController().navigate(R.id.action_previewImageFragment_to_resultFragment)
         }
         return binding.root
     }

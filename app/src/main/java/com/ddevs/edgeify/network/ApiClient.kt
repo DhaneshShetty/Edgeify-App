@@ -11,18 +11,20 @@ object ApiClient {
     init{
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
     }
-    val okHttpClient= OkHttpClient.Builder()
+    private val okHttpClient by lazy {
+        OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .readTimeout(10,TimeUnit.MINUTES)
         .callTimeout(10,TimeUnit.MINUTES)
         .connectTimeout(10,TimeUnit.MINUTES)
         .build()
+    }
     private val retrofit:Retrofit = Retrofit.Builder()
         .baseUrl("http://192.168.0.105:5000/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
         .build()
-    val service by lazy{
+    val service: ApiService by lazy{
         retrofit.create(ApiService::class.java)
     }
 }

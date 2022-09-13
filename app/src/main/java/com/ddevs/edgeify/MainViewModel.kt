@@ -9,9 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ddevs.edgeify.network.ApiClient
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
@@ -22,7 +20,7 @@ class MainViewModel:ViewModel() {
     private var _error:MutableLiveData<String> = MutableLiveData()
     val error:MutableLiveData<String> get() = _error
     private lateinit var fileUri:Uri
-    private lateinit var bitmap: Bitmap
+    private var bitmap: Bitmap? = null
     private var _resultUri:MutableLiveData<Pair<String,String>?> = MutableLiveData(null)
     val resultUri:LiveData<Pair<String,String>?>
         get()=_resultUri
@@ -37,12 +35,16 @@ class MainViewModel:ViewModel() {
 
     fun getBitmap() = bitmap
 
+    fun reset(){
+        bitmap = null
+    }
+
     fun getUri():Uri = fileUri
     fun processImage(file: File){
         viewModelScope.launch {
             _loading.value = true
             try {
-                var result = ApiClient.service.processImage(
+                val result = ApiClient.service.processImage(
                     MultipartBody.Part.createFormData(
                         name = "img",
                         filename = file.name,
@@ -50,7 +52,7 @@ class MainViewModel:ViewModel() {
                     )
                 )
                 if (result.isSuccessful) {
-                    var pair = Pair(
+                    val pair = Pair(
                         result.body()?.originalLink.toString(),
                         result.body()?.edgeLink.toString()
                     )
@@ -62,6 +64,8 @@ class MainViewModel:ViewModel() {
                 }
             }
             catch(ex:Exception){
+                _loading.value = false
+                _error.value = "Something went wrong"
                 Log.e("Exception",ex.message.toString())
             }
         }
