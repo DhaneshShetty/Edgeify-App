@@ -34,12 +34,12 @@ class GetImageFragment : Fragment() {
     }
     val imagePic = registerForActivityResult(ActivityResultContracts.PickVisualMedia()){
         if (it != null) {
-            val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver,it)
+            val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, it)
             viewModel.setBitmap(bitmap)
             viewModel.setUri(it)
+            Log.d("Uri", it.toString())
+            findNavController().navigate(R.id.action_getImageFragment_to_previewImageFragment)
         }
-        Log.d("Uri",it.toString())
-        findNavController().navigate(R.id.action_getImageFragment_to_previewImageFragment)
     }
     val captureImage = registerForActivityResult(ActivityResultContracts.TakePicture()){
         if(it) {
