@@ -1,5 +1,8 @@
 package com.ddevs.edgeify.views
 
+
+import android.Manifest.permission.CAMERA
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -12,6 +15,9 @@ import android.view.ViewGroup
 import android.webkit.URLUtil
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -86,12 +92,48 @@ class GetImageFragment : Fragment() {
             }
         }
         binding.captureBtn.setOnClickListener {
-            val getImage: File? = requireActivity().externalCacheDir
-            if (getImage != null) {
-                mainUri = FileProvider.getUriForFile(requireContext(),requireActivity().applicationContext.packageName + ".provider",File(getImage.path, "profile.png"))
-            }
-            captureImage.launch(mainUri)
+            if(checkPermission()) callCamera()
         }
         return binding.root
+    }
+    private fun callCamera(){
+        val getImage: File? = requireActivity().externalCacheDir
+        if (getImage != null) {
+            mainUri = FileProvider.getUriForFile(requireContext(),requireActivity().applicationContext.packageName + ".provider",File(getImage.path, "profile.png"))
+        }
+        captureImage.launch(mainUri)
+
+    }
+    private fun checkPermission():Boolean{
+        if (ContextCompat.checkSelfPermission(requireContext(), CAMERA )
+            == PackageManager.PERMISSION_DENIED){
+            requestPermissions(arrayOf(CAMERA), 1);
+            return false
+        }
+        return true
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            1 -> {
+                if ((grantResults.isNotEmpty() &&
+                            grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                ) {
+                    callCamera()
+                } else {
+                    Snackbar.make(
+                        binding.root,
+                        "Permission Denied:Camera cannot be accessed",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                return
+            }
+        }
     }
 }
